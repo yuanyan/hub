@@ -7,7 +7,7 @@
 // succession.
 //
 //     var object = {};
-//     Hub.extend(object, Hub.Events);
+//     _.extend(object, Hub.Events);
 //     object.on('expand', function(){ alert('expanded'); });
 //     object.trigger('expand');
 //
@@ -50,7 +50,7 @@ var Events = Hub.Events = {
       return this;
     }
 
-    var names = name ? [name] : Hub.keys(this._events);
+    var names = name ? [name] : _.keys(this._events);
     for (var i = 0, length = names.length; i < length; i++) {
       name = names[i];
 
@@ -114,7 +114,7 @@ var Events = Hub.Events = {
     for (var id in listeningTo) {
       obj = listeningTo[id];
       obj.off(name, callback, this);
-      if (remove || Hub.isEmpty(obj._events)) delete this._listeningTo[id];
+      if (remove || _.isEmpty(obj._events)) delete this._listeningTo[id];
     }
     return this;
   }
@@ -169,11 +169,11 @@ var listenMethods = {listenTo: 'on', listenToOnce: 'once'};
 // Inversion-of-control versions of `on` and `once`. Tell *this* object to
 // listen to an event in another object ... keeping track of what it's
 // listening to.
-Hub.each(listenMethods, function(implementation, method) {
+_.each(listenMethods, function(implementation, method) {
   Events[method] = function(obj, name, callback) {
     var listeningTo = this._listeningTo || (this._listeningTo = {});
     // Avoiding memory leaks in IE http://msdn.microsoft.com/en-us/magazine/ff728624.aspx
-    var id = obj._listenId || (obj._listenId = Hub.uniqueId('l'));
+    var id = obj._listenId || (obj._listenId = _.uniqueId('l'));
     listeningTo[id] = obj;
     if (!callback && typeof name === 'object') callback = this;
     obj[implementation](name, callback, this);
