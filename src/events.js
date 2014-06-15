@@ -172,6 +172,7 @@ var listenMethods = {listenTo: 'on', listenToOnce: 'once'};
 Hub.each(listenMethods, function(implementation, method) {
   Events[method] = function(obj, name, callback) {
     var listeningTo = this._listeningTo || (this._listeningTo = {});
+    // Avoiding memory leaks in IE http://msdn.microsoft.com/en-us/magazine/ff728624.aspx
     var id = obj._listenId || (obj._listenId = Hub.uniqueId('l'));
     listeningTo[id] = obj;
     if (!callback && typeof name === 'object') callback = this;
